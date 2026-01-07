@@ -24,9 +24,12 @@ model Case {
   updatedAt   DateTime @updatedAt
 
   // Relations
-  documents   Document[]
-  timelineEvents TimelineEvent[]
-  notes       Note[]
+  documents           Document[]
+  timelineEvents      TimelineEvent[]
+  notes               Note[]
+  contractTemplates   ContractTemplate[]
+  comparisonJobs      ContractComparisonJob[]
+  generatedArtifacts  GeneratedArtifact[]
 }
 
 model Document {
@@ -69,6 +72,59 @@ model Note {
   case        Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
 }
 
+// Contract Management Models
+
+model ContractTemplate {
+  id        String   @id @default(cuid())
+  userId    String
+  caseId    String?
+  name      String
+  fileUrl   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  case      Case?    @relation(fields: [caseId], references: [id], onDelete: SetNull)
+}
+
+model ContractComparisonJob {
+  id                  String              @id @default(cuid())
+  userId              String
+  caseId              String?
+  counterpartyFileUrl String
+  counterpartyFileName String
+  standardFileUrl     String
+  standardFileName    String
+  status              ComparisonJobStatus @default(QUEUED)
+  resultJson          String?             @db.Text
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+
+  // Relations
+  case                Case?               @relation(fields: [caseId], references: [id], onDelete: SetNull)
+}
+
+model GeneratedArtifact {
+  id              String       @id @default(cuid())
+  userId          String
+  caseId          String?
+  type            ArtifactType
+  title           String
+  contentMarkdown String       @db.Text
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  // Relations
+  case            Case?        @relation(fields: [caseId], references: [id], onDelete: SetNull)
+}
+
+model WaitlistSignup {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  source    String   @default("word-addin")
+  createdAt DateTime @default(now())
+}
+
 // Enums
 
 enum CaseStatus {
@@ -86,5 +142,21 @@ enum DocumentType {
   EVIDENCE
   RESEARCH
   DRAFT
+  CONTRACT
   OTHER
+}
+
+enum ComparisonJobStatus {
+  QUEUED
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum ArtifactType {
+  MEMO
+  PDF_SUMMARY
+  BRIEF_DRAFT
+  REDLINE
+  SOF
 }
