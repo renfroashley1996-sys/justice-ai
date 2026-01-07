@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Legal Case Management Models
+
+model Case {
+  id          String   @id @default(cuid())
+  caseNumber  String   @unique
+  title       String
+  description String?  @db.Text
+  status      CaseStatus @default(ACTIVE)
+  caseType    String?
+  filingDate  DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  documents   Document[]
+  timelineEvents TimelineEvent[]
+  notes       Note[]
+}
+
+model Document {
+  id          String   @id @default(cuid())
+  name        String
+  type        DocumentType
+  url         String?
+  content     String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  caseId      String
+  case        Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+}
+
+model TimelineEvent {
+  id          String   @id @default(cuid())
+  title       String
+  description String?  @db.Text
+  eventDate   DateTime
+  eventType   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  caseId      String
+  case        Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+}
+
+model Note {
+  id          String   @id @default(cuid())
+  title       String?
+  content     String   @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  caseId      String
+  case        Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+}
+
+// Enums
+
+enum CaseStatus {
+  ACTIVE
+  PENDING
+  CLOSED
+  ARCHIVED
+}
+
+enum DocumentType {
+  PLEADING
+  MOTION
+  DISCOVERY
+  CORRESPONDENCE
+  EVIDENCE
+  RESEARCH
+  DRAFT
+  OTHER
+}
