@@ -24,9 +24,12 @@ model Case {
   updatedAt   DateTime @updatedAt
 
   // Relations
-  documents   Document[]
-  timelineEvents TimelineEvent[]
-  notes       Note[]
+  documents              Document[]
+  timelineEvents         TimelineEvent[]
+  notes                  Note[]
+  contractTemplates      ContractTemplate[]
+  contractComparisonJobs ContractComparisonJob[]
+  generatedArtifacts     GeneratedArtifact[]
 }
 
 model Document {
@@ -87,4 +90,82 @@ enum DocumentType {
   RESEARCH
   DRAFT
   OTHER
+}
+
+// New Models for Product Capabilities
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  contractTemplates      ContractTemplate[]
+  contractComparisonJobs ContractComparisonJob[]
+  generatedArtifacts     GeneratedArtifact[]
+}
+
+model ContractTemplate {
+  id        String   @id @default(cuid())
+  userId    String
+  caseId    String?
+  name      String
+  fileId    String?
+  createdAt DateTime @default(now())
+
+  // Relations
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  case Case? @relation(fields: [caseId], references: [id], onDelete: SetNull)
+}
+
+model ContractComparisonJob {
+  id                 String                @id @default(cuid())
+  userId             String
+  caseId             String?
+  counterpartyFileId String
+  standardFileId     String
+  status             ComparisonJobStatus   @default(QUEUED)
+  createdAt          DateTime              @default(now())
+
+  // Relations
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  case Case? @relation(fields: [caseId], references: [id], onDelete: SetNull)
+}
+
+model GeneratedArtifact {
+  id              String       @id @default(cuid())
+  userId          String
+  caseId          String?
+  type            ArtifactType
+  title           String
+  contentMarkdown String       @db.Text
+  createdAt       DateTime     @default(now())
+
+  // Relations
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  case Case? @relation(fields: [caseId], references: [id], onDelete: SetNull)
+}
+
+model WaitlistSignup {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  source    String
+  createdAt DateTime @default(now())
+}
+
+enum ComparisonJobStatus {
+  QUEUED
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum ArtifactType {
+  MEMO
+  PDF_SUMMARY
+  BRIEF_DRAFT
+  REDLINE
+  SOF
 }

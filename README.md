@@ -62,30 +62,93 @@ AI-powered legal case analysis and management platform for legal professionals.
 ```
 justice-ai/
 ├── prisma/
-│   └── schema.prisma        # Database schema
+│   └── schema.prisma           # Database schema
 ├── src/
-│   ├── app/                  # Next.js App Router pages
-│   │   ├── discovery/        # Discovery management
-│   │   ├── drafting/         # Document drafting
-│   │   ├── research/         # Legal research
-│   │   ├── strategy/         # Case strategy
-│   │   ├── timeline/         # Case timeline
-│   │   ├── layout.tsx        # Root layout
-│   │   └── page.tsx          # Dashboard home
+│   ├── app/
+│   │   ├── api/                # API routes
+│   │   │   └── waitlist/       # Waitlist signup API
+│   │   ├── app/                # Protected app routes
+│   │   │   ├── legal-assistant/
+│   │   │   ├── legal-research/
+│   │   │   ├── timeline/
+│   │   │   ├── discovery/
+│   │   │   ├── drafting/
+│   │   │   ├── strategy/
+│   │   │   ├── contract-redlining/
+│   │   │   ├── compare-contracts/
+│   │   │   ├── word-addin/
+│   │   │   ├── layout.tsx      # App layout with NotLegalAdviceBanner
+│   │   │   └── page.tsx        # Dashboard
+│   │   ├── features/           # Features marketing page
+│   │   ├── layout.tsx          # Root layout
+│   │   └── page.tsx            # Public landing page
 │   ├── components/
-│   │   ├── layout/           # Layout components (Sidebar, Header)
-│   │   └── ui/               # shadcn/ui components
-│   ├── hooks/                # Custom React hooks
-│   ├── lib/                  # Utility functions
-│   ├── styles/               # Global styles
-│   └── types/                # TypeScript types
-├── .eslintrc.json            # ESLint configuration
-├── .prettierrc               # Prettier configuration
-├── components.json           # shadcn/ui configuration
-├── next.config.js            # Next.js configuration
-├── tailwind.config.ts        # Tailwind CSS configuration
-└── tsconfig.json             # TypeScript configuration
+│   │   ├── layout/             # Layout components (Sidebar, Header)
+│   │   ├── shared/             # Shared components
+│   │   │   ├── not-legal-advice-banner.tsx
+│   │   │   ├── feature-section.tsx
+│   │   │   └── coming-soon-page.tsx
+│   │   └── ui/                 # shadcn/ui components
+│   ├── lib/                    # Utility functions
+│   └── styles/                 # Global styles
+├── .eslintrc.json              # ESLint configuration
+├── .prettierrc                 # Prettier configuration
+├── components.json             # shadcn/ui configuration
+├── next.config.js              # Next.js configuration
+├── tailwind.config.ts          # Tailwind CSS configuration
+└── tsconfig.json               # TypeScript configuration
 ```
+
+## Implementation Status
+
+### Implemented (UI + Routes + Scaffolding)
+
+| Feature | Route | Status |
+|---------|-------|--------|
+| Public Landing Page | `/` | ✅ Implemented |
+| Features Page | `/features` | ✅ Implemented |
+| Dashboard | `/app` | ✅ Implemented |
+| Legal Assistant | `/app/legal-assistant` | ✅ UI Scaffolding |
+| Legal Research | `/app/legal-research` | ✅ UI Scaffolding |
+| Timeline | `/app/timeline` | ✅ UI Scaffolding |
+| Discovery | `/app/discovery` | ✅ UI Scaffolding |
+| Drafting | `/app/drafting` | ✅ UI Scaffolding |
+| Strategy | `/app/strategy` | ✅ UI Scaffolding |
+| Contract Redlining | `/app/contract-redlining` | ✅ Upload UI + Status |
+| Compare Contracts | `/app/compare-contracts` | ✅ Upload UI + Diff Table |
+| Word Add-in | `/app/word-addin` | ✅ Coming Soon + Waitlist |
+
+### Database Models
+
+| Model | Status |
+|-------|--------|
+| Case | ✅ Implemented |
+| Document | ✅ Implemented |
+| TimelineEvent | ✅ Implemented |
+| Note | ✅ Implemented |
+| User | ✅ Implemented |
+| ContractTemplate | ✅ Implemented |
+| ContractComparisonJob | ✅ Implemented |
+| GeneratedArtifact | ✅ Implemented |
+| WaitlistSignup | ✅ Implemented |
+
+### Reusable Components
+
+| Component | Status |
+|-----------|--------|
+| NotLegalAdviceBanner | ✅ Implemented |
+| FeatureSection | ✅ Implemented |
+| ComingSoonPage | ✅ Implemented |
+
+### Stubbed (Pending AI Integration)
+
+- AI chat functionality in Legal Assistant
+- AI-powered legal research search
+- AI document analysis in Discovery
+- AI-assisted document drafting
+- AI case strategy analysis
+- AI contract comparison logic
+- AI redline generation
 
 ## Available Scripts
 
@@ -103,13 +166,27 @@ justice-ai/
 | `npm run db:migrate` | Run database migrations |
 | `npm run db:studio` | Open Prisma Studio |
 
-## Features (Planned)
+## Product Capabilities
 
-- **Legal Research** - AI-powered case law and statute search
-- **Case Timeline** - Visual timeline of case events and deadlines
-- **Discovery** - Document management and organization
-- **Drafting** - AI-assisted legal document drafting
-- **Strategy** - Case analysis and strategy planning
+### A) Immediate Legal Answers & Deep Analysis
+- Receive immediate answers to legal questions & analysis of complex fact patterns
+- Draft extensive memos & high-quality PDF summaries in 10–15 minutes
+- Produce early brief drafts (memoranda of law)
+- Benefit from an intelligent legal AI "army" providing cases, statutes, & more
+
+### B) Contract Redlining at 10X Speed
+- Redline contracts 10X faster
+- Summarize core & discrete differences vs. your gold standard
+- Compare against market for every provision
+- See AI-generated redline suggestions with 1-click
+- Draft from scratch or using your own templates
+
+### C) Discovery & Timelines Beyond ChatGPT for Law
+- Use the Word add-in to draft contracts via AI (Coming Soon)
+- Create timelines & statements of facts with relevant files
+- Conduct doc review with enormous numbers of documents in minutes
+- Proofread & improve writing
+- Leverage a flexible Legal AI Assistant
 
 ## Adding shadcn/ui Components
 
